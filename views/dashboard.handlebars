@@ -1,0 +1,15 @@
+<div class="mt-4">
+    <h2>Your Posts</h2>
+    {{#each userPosts}}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{this.title}}</h5>
+                <p class="card-text">{{this.content}}</p>
+                <!-- Add edit and delete functionality as per your server-side -->
+                <button class="btn btn-secondary">Edit</button>
+                <button class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    {{/each}}
+    <a href="/newpost" class="btn btn-primary">Add a new post</a>
+</div>
