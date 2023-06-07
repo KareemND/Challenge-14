@@ -1,67 +1,30 @@
 const router = require('express').Router();
 const { User } = require('../../models');
 
-// Login route
-router.get('/login', (req, res) => {
-  if (req.session.loggedIn) {
-    res.redirect('/dashboard');
-    return;
-  }
-
-  res.render('login');
-});
-
-router.post('/login', async (req, res) => {
-  try {
-    const userData = await User.findOne({ where: { username: req.body.username } });
-
-    if (!userData) {
-      res.status(400).json({ message: 'Incorrect username or password.' });
-      return;
-    }
-
-    const validPassword = await userData.checkPassword(req.body.password);
-
-    if (!validPassword) {
-      res.status(400).json({ message: 'Incorrect username or password.' });
-      return;
-    }
-
-    req.session.save(() => {
-      req.session.user_id = userData.id;
-      req.session.loggedIn = true;
-
-      res.json({ user: userData, message: 'You are now logged in!' });
-    });
-
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// Signup route
-router.get('/signup', (req, res) => {
-  if (req.session.loggedIn) {
-    res.redirect('/dashboard');
-    return;
-  }
-
-  res.render('signup');
-});
 
 router.post('/signup', async (req, res) => {
   try {
-    const userData = await User.create(req.body);
+    const userData = await User.create({
+      username: req.body.username,
+      password: req.body.password,
+    });
 
     req.session.save(() => {
       req.session.user_id = userData.id;
       req.session.username = userData.username;
       req.session.loggedIn = true;
 
-      res.status(200).json(userData);
+      res.redirect('/');
     });
+
   } catch (err) {
-    res.status(500).json(err);
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      res.status(409).json({ message: 'Username already taken.' });
+    } else if (err.name === 'SequelizeValidationError') {
+      res.status(400).json({ message: 'Password must be at least 8 characters long.' });
+    } else {
+      res.status(500).json(err);
+    }
   }
 });
 
