@@ -19,7 +19,7 @@
   },
   "homepage": "http://localhost:3000/",
   "dependencies": {
-    "bcrypt": "^5.0.0",
+    "bcrypt": "^5.1.0",
     "bootstrap": "^5.3.0",
     "config": "^3.3.9",
     "connect-session-sequelize": "^7.1.7",
