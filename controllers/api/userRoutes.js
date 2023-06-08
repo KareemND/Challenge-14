@@ -12,7 +12,7 @@ router.post('/signup', async (req, res) => {
     req.session.save(() => {
       req.session.user_id = userData.id;
       req.session.username = userData.username;
-      req.session.loggedIn = true;
+      req.session.logged_in = true;
 
       res.json(userData);
     });
@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
     req.session.save(() => {
       req.session.user_id = user.id;
       req.session.username = user.username;
-      req.session.loggedIn = true;
+      req.session.logged_in = true;
 
       res.json({ user, message: 'Successfully logged in!'});
     });
@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
 
 // Logout route
 router.post('/logout', (req, res) => {
-  if (req.session.loggedIn) {
+  if (req.session.logged_in) {
     req.session.destroy(() => {
       res.status(204).end();
     });
